@@ -1,0 +1,8 @@
+.del-icon {
+  color: "lightgray";
+  cursor: pointer;
+  font-size: x-large;
+}
+.del-icon :hover {
+  color: crimson;
+}/*# sourceMappingURL=table.css.map */

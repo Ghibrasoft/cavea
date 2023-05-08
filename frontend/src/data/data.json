@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "name": "ნივთი 1",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 2,
+    "name": "ნივთი 2",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 3,
+    "name": "ნივთი 3",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 4,
+    "name": "ნივთი 4",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 5,
+    "name": "ნივთი 5",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 6,
+    "name": "ნივთი 6",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 7,
+    "name": "ნივთი 7",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 8,
+    "name": "ნივთი 8",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 9,
+    "name": "ნივთი 9",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 10,
+    "name": "ნივთი 10",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 11,
+    "name": "ნივთი 11",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 12,
+    "name": "ნივთი 12",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 13,
+    "name": "ნივთი 13",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 14,
+    "name": "ნივთი 14",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 15,
+    "name": "ნივთი 15",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 16,
+    "name": "ნივთი 16",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 17,
+    "name": "ნივთი 17",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 18,
+    "name": "ნივთი 18",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 19,
+    "name": "ნივთი 19",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 20,
+    "name": "ნივთი 20",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 21,
+    "name": "ნივთი 21",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 22,
+    "name": "ნივთი 22",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 23,
+    "name": "ნივთი 23",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 24,
+    "name": "ნივთი 24",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 25,
+    "name": "ნივთი 25",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 26,
+    "name": "ნივთი 26",
+    "location": "მთავარი ოფისი",
+    "branch": "headOffice",
+    "price": "30 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 27,
+    "name": "ნივთი 27",
+    "location": "კავეა ისთ ფოინთი",
+    "branch": "caveaEastPoint",
+    "price": "20 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 28,
+    "name": "ნივთი 28",
+    "location": "კავეა სითი მოლი",
+    "branch": "caveaCityMall",
+    "price": "25 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 29,
+    "name": "ნივთი 29",
+    "location": "კავეა თბილისი მოლი",
+    "branch": "caveaTbilisiMall",
+    "price": "15 ₾",
+    "ind": "all"
+  },
+  {
+    "id": 30,
+    "name": "ნივთი 30",
+    "location": "კავეა გალერეა",
+    "branch": "caveaGallery",
+    "price": "10 ₾",
+    "ind": "all"
+  }
+]

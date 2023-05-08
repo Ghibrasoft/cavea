@@ -1,0 +1,51 @@
+        // const [currPage, setCurrPage] = useState(1);
+
+  // const recordsPage = 20;
+  // const lastInd = currPage * recordsPage;
+  // const firstInd = lastInd - recordsPage;
+  // const records = items.slice(firstInd, lastInd);
+  // const nPage = Math.ceil(data.length / recordsPage);
+  // const numbers = [...Array(nPage + 1).keys()].slice(1);
+
+  // function prevPage() {
+  //   if (currPage !== 1) {
+  //     setCurrPage(currPage - 1);
+  //   }
+  // }
+
+  // function nextPage() {
+  //   if (currPage !== nPage) {
+  //     setCurrPage(currPage + 1);
+  //   }
+  // }
+
+  // function changePage(n: number) {
+  //   setCurrPage(n);
+  // }
+      
+      
+      
+      {/* pagination */}
+      <nav aria-label="...">
+        <ul className="pagination justify-content-end align-items-center">
+
+          {/* prev button */}
+          <li className={`page-item ${currPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link" tabIndex={-1} aria-disabled="true" onClick={prevPage}>Prev</button>
+          </li>
+          {/* numbers of pages */}
+          {
+            numbers.map((n, i) => (
+              <li className={`page-item ${currPage === n ? 'active' : ''}`} key={i}>
+                <button className="page-link" onClick={() => changePage(n)}>{n}</button>
+              </li>
+            ))
+          }
+          {/* next button */}
+          <li className={`page-item ${currPage === nPage ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={nextPage}>Next</button>
+          </li>
+          {/* items quantity */}
+          <small className='text-muted ms-1'>({items.length}) ნივთი</small>
+        </ul>
+      </nav>
