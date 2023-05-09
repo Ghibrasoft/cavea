@@ -10,6 +10,5 @@ export function AddButton() {
                 <IoMdAdd size={20} /> Add
             </Button>
         </Link>
-
     )
 }

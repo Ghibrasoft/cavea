@@ -4,8 +4,6 @@ import { FilterSelect } from "./FilterSelect";
 import { useEffect, useState } from "react";
 import { useItemsData } from "../store/Store";
 import axios from "axios";
-import { AiFillDelete } from 'react-icons/ai'
-import '../styles/table.css';
 
 export function TableComp() {
   const { getData } = useItemsData();
@@ -26,10 +24,10 @@ export function TableComp() {
       console.log(error);
     }
   }
-
   useEffect(() => {
     fetchData(data.currentPage);
   }, [data.currentPage]);
+
 
   async function handleDelete(id: number) {
     try {
@@ -65,17 +63,18 @@ export function TableComp() {
         </thead>
         <tbody>
           {Array.isArray(data.rows) &&
-            data.rows.map(({ id, item, location, price }) => (
+            data.rows.filter(({ location }) => value === location || value === "all").map(({ id, item, location, price }) => (
               <tr key={id}>
                 <td className='text-center'>{item}</td>
                 <td className='text-center'>{location}</td>
                 <td className='text-center'>{price}</td>
                 <td className='text-center'>
-                  <AiFillDelete
-                    cursor="pointer"
-                    className='del-icon'
+                  <button
+                    className="badge rounded-pill bg-danger border-0"
                     onClick={() => handleDelete(id)}
-                  />
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -89,6 +88,7 @@ export function TableComp() {
               handlePageChange(Math.max(data.currentPage - 1, 1))
             }
           />
+
           {pageNumbers.map((pageNumber) => (
             <Pagination.Item
               key={pageNumber}
@@ -103,7 +103,9 @@ export function TableComp() {
               handlePageChange(Math.min(data.currentPage + 1, data.totalPages))
             }
           />
-          <small className="d-flex align-items-center text-muted fst-italic ms-1">({data.allItemsLength}) Total</small>
+          <small className="d-flex align-items-center text-muted fst-italic ms-1">
+            ({data.allItemsLength}) Item/s
+          </small>
         </Pagination>
       </div>
     </Container>

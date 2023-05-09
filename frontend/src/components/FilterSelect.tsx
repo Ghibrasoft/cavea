@@ -3,17 +3,17 @@ type selectType = {
 }
 
 
-export function FilterSelect({setValue}: selectType) {
+export function FilterSelect({ setValue }: selectType) {
 
     return (
         <div>
-            <select className="form-select" onChange={(e) => setValue(e.target.value) }>
+            <select className="form-select" onChange={(e) => setValue(e.target.value)}>
                 <option value="all">ყველა</option>
-                <option value="headOffice">მთავარი ოფისი</option>
-                <option value="caveaGallery">კავეა გალერეა</option>
-                <option value="caveaTbilisiMall">კავეა თბილისი მოლი</option>
-                <option value="caveaEastPoint">კავეა ისთ ფოინთი</option>
-                <option value="caveaCityMall">კავეა სითი მოლი</option>
+                <option value="Head Office">მთავარი ოფისი</option>
+                <option value="Cavea Tbilisi Mall">კავეა თბილისი მოლი</option>
+                <option value="Cavea City Mall">კავეა სითი მოლი</option>
+                <option value="Cavea East Point">კავეა ისთ ფოინთი</option>
+                <option value="Cavea Gallery">კავეა გალერეა</option>
             </select>
         </div>
     )

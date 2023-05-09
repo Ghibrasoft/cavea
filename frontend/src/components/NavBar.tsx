@@ -11,7 +11,7 @@ export function NavBar() {
         <img
           src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi5WYsoyV3Gmx_xaxQEvPTrT-LHVzIoHdS9lxSJIkp&s'
           alt='cavea'
-          style={{ width: 250, height: 70, cursor: 'pointer' }}
+          style={{ width: 200, height: 50, cursor: 'pointer' }}
           onClick={() => navigate('/')}
         />
         <Nav className='ms-auto'>
