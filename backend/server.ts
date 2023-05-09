@@ -3,6 +3,8 @@ import express, { Request, Response } from "express";
 import { Express } from "express";
 import Chance from "chance";
 import cors from "cors";
+require("dotenv").config();
+
 
 const chance = new Chance();
 
@@ -12,10 +14,10 @@ app.use(cors({ origin: "http://localhost:3000" }));
 
 // Passing a connection URL
 const sequelize = new Sequelize(
-  "postgresql://postgres:5ikBywN6iHfnYzZ7SoOn@containers-us-west-44.railway.app:6433/railway",
+  process.env.CONN_POSTG_URL || '',
   {
     define: {
-      freezeTableName: true, // globally, don't pluralize names
+      freezeTableName: true, // don't pluralize names globally
     },
   }
 );
@@ -39,7 +41,7 @@ const Inventory = sequelize.define(
       type: DataTypes.INTEGER,
     },
   },
-  { freezeTableName: true } // locally, don't pluralize names
+  { freezeTableName: true } //  don't pluralize names locally
 );
 
 // Creates the table if it doesn't exist (and does nothing if it already exists)
