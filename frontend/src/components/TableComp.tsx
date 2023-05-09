@@ -32,7 +32,7 @@ export function TableComp() {
   async function handleDelete(id: number) {
     try {
       await axios.delete(`http://localhost:3001/Inventory/${id}`)
-      getData();
+      getData(); // don't updates , cann't find why (it works on POST, but here not), just refresh manually and see changes :)
     } catch (error) {
       console.log(error);
     }
