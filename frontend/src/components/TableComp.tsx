@@ -1,17 +1,15 @@
-import { AiFillDelete } from 'react-icons/ai';
-import { AddButton } from './AddButton';
-import { FilterSelect } from './FilterSelect';
+import { Container, Pagination } from "react-bootstrap";
+import { AddButton } from "./AddButton";
+import { FilterSelect } from "./FilterSelect";
+import { useEffect, useState } from "react";
+import { useItemsData } from "../store/Store";
+import axios from "axios";
+import { AiFillDelete } from 'react-icons/ai'
 import '../styles/table.css';
-import { useEffect, useState } from 'react';
-import { Container, Pagination } from 'react-bootstrap';
-import { ItemProps, useItemsData } from '../store/Store';
-import axios from 'axios';
-
 
 export function TableComp() {
   const { getData } = useItemsData();
   const [value, setValue] = useState("all");
-  // const [tableRows, setTableRows] = useState<ItemProps>();
   const [data, setData] = useState({
     rows: [],
     allItemsLength: 0,
@@ -19,21 +17,20 @@ export function TableComp() {
     currentPage: 1,
   });
 
-  // fetching data from server
-  async function fetchData() {
+  async function fetchData(page: number) {
     try {
-      const res = await axios.get("http://localhost:3001/Inventory")
-      const { rows, allItemsLength, totalPages, currentPage, } = res.data;
-      // setTableRows(rows);
+      const res = await axios.get("http://localhost:3001/Inventory", { params: { page } })
+      const { rows, allItemsLength, totalPages, currentPage } = res.data;
       setData({ rows, allItemsLength, totalPages, currentPage });
     } catch (error) {
       console.log(error);
     }
   }
-  useEffect(() => { fetchData() }, []);
 
+  useEffect(() => {
+    fetchData(data.currentPage);
+  }, [data.currentPage]);
 
-  // delete item row
   async function handleDelete(id: number) {
     try {
       await axios.delete(`http://localhost:3001/Inventory/${id}`)
@@ -43,16 +40,20 @@ export function TableComp() {
     }
   }
 
+  function handlePageChange(pageNumber: number) {
+    setData((prevData) => ({ ...prevData, currentPage: pageNumber }));
+  }
+
+  // Generate an array of page numbers to display in pagination
+  const pageNumbers = [...Array(data.totalPages)].map((_, index) => index + 1);
 
   return (
     <Container>
-      {/* add button  & filter */}
       <div className='hstack gap-3 d-flex justify-content-end'>
         <AddButton />
         <FilterSelect setValue={setValue} />
       </div>
 
-      {/* table */}
       <table className="table table-striped table-borderless">
         <thead className="table-success">
           <tr>
@@ -62,34 +63,49 @@ export function TableComp() {
             <th scope="col" className='text-center'>ოპერაციები</th>
           </tr>
         </thead>
-        {/* display with filtering by branch of cavea */}
         <tbody>
-          {
-            Array.isArray(data.rows) && data.rows.map(({ id, item, location, price }) => (
+          {Array.isArray(data.rows) &&
+            data.rows.map(({ id, item, location, price }) => (
               <tr key={id}>
                 <td className='text-center'>{item}</td>
                 <td className='text-center'>{location}</td>
                 <td className='text-center'>{price}</td>
-                <td className='text-center'><AiFillDelete className='del-icon' onClick={() => handleDelete(id)} /></td>
+                <td className='text-center'>
+                  <AiFillDelete
+                    cursor="pointer"
+                    className='del-icon'
+                    onClick={() => handleDelete(id)}
+                  />
+                </td>
               </tr>
-            ))
-          }
+            ))}
         </tbody>
       </table>
 
-      {/* new pagination */}
-      <div>
+      <div className="d-flex justify-content-end align-items-center">
         <Pagination>
-          <Pagination.Prev />
-          <Pagination.Item active>{ }</Pagination.Item>
-          <Pagination.Item>{data.currentPage + 1}</Pagination.Item>
-          <Pagination.Ellipsis />
-          <Pagination.Item>{data.totalPages}</Pagination.Item>
-          <Pagination.Next />
+          <Pagination.Prev
+            onClick={() =>
+              handlePageChange(Math.max(data.currentPage - 1, 1))
+            }
+          />
+          {pageNumbers.map((pageNumber) => (
+            <Pagination.Item
+              key={pageNumber}
+              active={pageNumber === data.currentPage}
+              onClick={() => handlePageChange(pageNumber)}
+            >
+              {pageNumber}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() =>
+              handlePageChange(Math.min(data.currentPage + 1, data.totalPages))
+            }
+          />
+          <small className="d-flex align-items-center text-muted fst-italic ms-1">({data.allItemsLength}) Total</small>
         </Pagination>
-        <span>{data.allItemsLength}</span>
       </div>
-
     </Container>
   )
 }

@@ -47,7 +47,7 @@ async function addModel() {
 }
 addModel();
 
-// Adding test records randomly (unComment and press Ctrl + S )
+// generate records randomly for testing (unComment and press Ctrl + S ) 
 // const branches = [
 //   "Head Office",
 //   "Cavea Tbilisi Mall",

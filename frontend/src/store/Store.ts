@@ -39,8 +39,7 @@ export const useItemsData = create<ICustomHookProps>((set) => ({
       const response = await axios.get<IGetInventoryResponse>(
         "http://localhost:3001/Inventory"
       );
-      const { rows: items, count } = response.data;
-      const {rows} = response.data;
+      const { rows, count } = response.data;
       set({
         rows,
         totalPages: Math.ceil(count / limit),
@@ -59,7 +58,6 @@ async function getData() {
     );
     const items = response.data;
     useItemsData.setState({ items });
-    console.log("from store",items); // loging items for test
   } catch (error) {
     console.log(error);
   }
