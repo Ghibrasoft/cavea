@@ -2,7 +2,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import { AddButton } from './AddButton';
 import { FilterSelect } from './FilterSelect';
 import '../styles/table.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Pagination } from 'react-bootstrap';
 import { useItemsData } from '../store/Store';
 import axios from 'axios';
@@ -14,7 +14,6 @@ export function TableComp() {
 
   // delete item row
   async function handleDelete(id: number) {
-    console.log(id)
     try {
       await axios.delete(`http://localhost:3001/Inventory/${id}`)
       getData();
@@ -22,8 +21,9 @@ export function TableComp() {
       console.log(error);
     }
   }
+  
 
-  // console.log(items)
+  console.log("from tableComp", items)
   return (
     <Container>
       {/* add button  & filter */}
@@ -57,11 +57,9 @@ export function TableComp() {
         </tbody>
       </table>
 
-
       {/* new pagination */}
-      <div>
+      {/* <div>
         <Pagination>
-          {/* <Pagination.First /> */}
           <Pagination.Prev />
           <Pagination.Item active>{currentPage}</Pagination.Item>
           <Pagination.Item>{currentPage + 1}</Pagination.Item>
@@ -69,10 +67,9 @@ export function TableComp() {
           <Pagination.Ellipsis />
           <Pagination.Item>{totalPages}</Pagination.Item>
           <Pagination.Next />
-          {/* <Pagination.Last /> */}
         </Pagination>
-        {/* <span>{items.length}</span> */}
-      </div>
+        <span>{items.length}</span>
+      </div> */}
 
 
     </Container>

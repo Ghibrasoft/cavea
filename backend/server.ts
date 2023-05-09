@@ -5,7 +5,6 @@ import Chance from "chance";
 import cors from "cors";
 require("dotenv").config();
 
-
 const chance = new Chance();
 
 const app: Express = express();
@@ -13,14 +12,11 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
 
 // Passing a connection URL
-const sequelize = new Sequelize(
-  process.env.CONN_POSTG_URL || '',
-  {
-    define: {
-      freezeTableName: true, // don't pluralize names globally
-    },
-  }
-);
+const sequelize = new Sequelize(process.env.CONN_POSTG_URL || "", {
+  define: {
+    freezeTableName: true, // don't pluralize names globally
+  },
+});
 
 // Creating a model
 const Inventory = sequelize.define(
@@ -72,58 +68,34 @@ addModel();
 // }
 // addItem();
 
-interface ItemProps {
-  id: number;
-  item: string;
-  location: string;
-  price: number;
-}
-
-// interface InventoryResponse {
-//     rows: ItemProps[];
-//     count: number;
-//   }
-
-// GET all items
-// app.get("/Inventory", async (req: Request, res: Response) => {
-//   // pagination and sorting
-//   const page = Number(req.query.page) || 1;
-//   const limit = 20;
-//   const offset = (page - 1) * limit;
-
-//   const { count, rows } = await Inventory.findAndCountAll({
-//     order: [
-//       ["item", "ASC"],
-//       ["price", "DESC"],
-//     ],
-//     limit: limit,
-//     offset: offset,
-//   });
-
-//   res.json({
-//     items: rows,
-//     totalPages: Math.ceil(count / limit),
-//     currentPage: page,
-//   });
-// });
-
-
 // GET all items
 app.get("/Inventory", async (req: Request, res: Response) => {
   // pagination and sorting
   const page = Number(req.query.page) || 1;
   const limit = 20;
   const offset = (page - 1) * limit;
-  
-  const items = await Inventory.findAndCountAll({
+
+  const { count, rows } = await Inventory.findAndCountAll({
+    limit: limit,
+    offset: offset,
     order: [
       ["item", "ASC"],
       ["price", "DESC"],
     ],
-    limit: limit,
-    offset: offset,
   });
-  res.json(items.rows,)
+  const allItems = await Inventory.findAll();
+  const allItemsLength = allItems.length;
+  const data = {
+    rows: [
+      {
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+        allItemsLength,
+      },
+      ...rows,
+    ],
+  };
+  res.json(data);
 });
 
 // POST
@@ -146,9 +118,9 @@ app.delete("/Inventory/:id", async (req: Request, res: Response) => {
   }
 });
 
-console.log(sequelize.models.Inventory === Inventory);
-app.listen(3001, () => {
-  console.log("Running 3001");
+const port = process.env.PORT || 4321;
+app.listen(port, () => {
+  console.log(`Server is Running on ${port}`);
 });
 
-// module.exports = Inventory; //  it can be imported and used by other modules in your application.
+module.exports = Inventory; //  it can be imported and used by other modules in your application.
