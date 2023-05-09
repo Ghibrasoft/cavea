@@ -12,20 +12,22 @@ interface ICustomHookProps {
   items: ItemProps[];
   totalPages: number;
   currentPage: number;
+  allItemsLength: number;
   setTotalPages: (totalPages: number) => void;
   setCurrentPage: (currentPage: number) => void;
   setItems: (item: ItemProps[]) => void;
   getData: (page?: number, limit?: number) => Promise<void>;
+  rows: ItemProps[];
 }
 
 interface IGetInventoryResponse {
   rows: ItemProps[];
   count: number;
-  allItemsLength: number;
 }
 
 export const useItemsData = create<ICustomHookProps>((set) => ({
   items: [],
+  rows: [],
   totalPages: 0,
   currentPage: 1,
   allItemsLength: 0,
@@ -38,8 +40,9 @@ export const useItemsData = create<ICustomHookProps>((set) => ({
         "http://localhost:3001/Inventory"
       );
       const { rows: items, count } = response.data;
+      const {rows} = response.data;
       set({
-        items,
+        rows,
         totalPages: Math.ceil(count / limit),
         currentPage: page,
       });

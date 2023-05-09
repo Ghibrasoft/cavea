@@ -83,17 +83,14 @@ app.get("/Inventory", async (req: Request, res: Response) => {
       ["price", "DESC"],
     ],
   });
+
   const allItems = await Inventory.findAll();
   const allItemsLength = allItems.length;
   const data = {
-    rows: [
-      {
-        totalPages: Math.ceil(count / limit),
-        currentPage: page,
-        allItemsLength,
-      },
-      ...rows,
-    ],
+    rows,
+    totalPages: Math.ceil(count / limit),
+    currentPage: page,
+    allItemsLength,
   };
   res.json(data);
 });

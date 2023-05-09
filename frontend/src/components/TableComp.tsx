@@ -4,13 +4,34 @@ import { FilterSelect } from './FilterSelect';
 import '../styles/table.css';
 import { useEffect, useState } from 'react';
 import { Container, Pagination } from 'react-bootstrap';
-import { useItemsData } from '../store/Store';
+import { ItemProps, useItemsData } from '../store/Store';
 import axios from 'axios';
 
 
 export function TableComp() {
-  const { items, totalPages, currentPage, getData } = useItemsData();
+  const { getData } = useItemsData();
   const [value, setValue] = useState("all");
+  // const [tableRows, setTableRows] = useState<ItemProps>();
+  const [data, setData] = useState({
+    rows: [],
+    allItemsLength: 0,
+    totalPages: 0,
+    currentPage: 1,
+  });
+
+  // fetching data from server
+  async function fetchData() {
+    try {
+      const res = await axios.get("http://localhost:3001/Inventory")
+      const { rows, allItemsLength, totalPages, currentPage, } = res.data;
+      // setTableRows(rows);
+      setData({ rows, allItemsLength, totalPages, currentPage });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => { fetchData() }, []);
+
 
   // delete item row
   async function handleDelete(id: number) {
@@ -21,9 +42,8 @@ export function TableComp() {
       console.log(error);
     }
   }
-  
 
-  console.log("from tableComp", items)
+
   return (
     <Container>
       {/* add button  & filter */}
@@ -45,7 +65,7 @@ export function TableComp() {
         {/* display with filtering by branch of cavea */}
         <tbody>
           {
-            Array.isArray(items) && items.map(({ id, item, location, price }) => (
+            Array.isArray(data.rows) && data.rows.map(({ id, item, location, price }) => (
               <tr key={id}>
                 <td className='text-center'>{item}</td>
                 <td className='text-center'>{location}</td>
@@ -58,19 +78,17 @@ export function TableComp() {
       </table>
 
       {/* new pagination */}
-      {/* <div>
+      <div>
         <Pagination>
           <Pagination.Prev />
-          <Pagination.Item active>{currentPage}</Pagination.Item>
-          <Pagination.Item>{currentPage + 1}</Pagination.Item>
-          <Pagination.Item>{currentPage + 2}</Pagination.Item>
+          <Pagination.Item active>{ }</Pagination.Item>
+          <Pagination.Item>{data.currentPage + 1}</Pagination.Item>
           <Pagination.Ellipsis />
-          <Pagination.Item>{totalPages}</Pagination.Item>
+          <Pagination.Item>{data.totalPages}</Pagination.Item>
           <Pagination.Next />
         </Pagination>
-        <span>{items.length}</span>
-      </div> */}
-
+        <span>{data.allItemsLength}</span>
+      </div>
 
     </Container>
   )
