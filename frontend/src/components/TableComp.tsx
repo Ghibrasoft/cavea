@@ -1,24 +1,46 @@
-import { Container, Pagination } from "react-bootstrap";
+import { Container, Pagination, Toast } from "react-bootstrap";
 import { AddButton } from "./AddButton";
 import { FilterSelect } from "./FilterSelect";
 import { useEffect, useState } from "react";
 import { useItemsData } from "../store/Store";
 import axios from "axios";
 
+
+interface IDataProps {
+  rows: {
+    id: number;
+    item: string;
+    location: string;
+    price: number;
+  }[];
+  allItemsLength: number;
+  totalPages: number;
+  currentPage: number;
+};
+
 export function TableComp() {
   const { getData } = useItemsData();
   const [value, setValue] = useState("all");
-  const [data, setData] = useState({
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [data, setData] = useState<IDataProps>({
     rows: [],
     allItemsLength: 0,
     totalPages: 0,
     currentPage: 1,
   });
 
+  // alert msg timeout
+  useEffect(() => {
+    setTimeout(() => {
+      setDeleteAlert(false);
+    }, 4000);
+  })
+
+  // data fetching
   async function fetchData(page: number) {
     try {
       const res = await axios.get("http://localhost:3001/Inventory", { params: { page } })
-      const { rows, allItemsLength, totalPages, currentPage } = res.data;
+      const { rows, allItemsLength, totalPages, currentPage } = res.data as IDataProps;
       setData({ rows, allItemsLength, totalPages, currentPage });
     } catch (error) {
       console.log(error);
@@ -29,26 +51,45 @@ export function TableComp() {
   }, [data.currentPage]);
 
 
+  // delete row
   async function handleDelete(id: number) {
     try {
       await axios.delete(`http://localhost:3001/Inventory/${id}`)
       getData(); // don't updates , cann't find why (it works on POST, but here not), just refresh manually and see changes :)
+      setDeleteAlert(true);
+      const filteredRows = data.rows.filter((item) => item.id !== id);
+      setData((prevData) => ({
+        ...prevData,
+        rows: filteredRows,
+        allItemsLength: prevData.allItemsLength - 1,
+      }));
     } catch (error) {
       console.log(error);
     }
   }
 
+  // page changing
   function handlePageChange(pageNumber: number) {
     setData((prevData) => ({ ...prevData, currentPage: pageNumber }));
   }
 
-  // Generate an array of page numbers to display in pagination
+  // generate an array of page numbers to display in pagination
   const pageNumbers = [...Array(data.totalPages)].map((_, index) => index + 1);
 
   return (
     <Container>
       <div className='hstack gap-3 d-flex justify-content-end'>
+        <Toast show={deleteAlert} onClose={() => setDeleteAlert(false)}>
+          <Toast.Header closeButton={false}>
+            <strong className="me-auto">Success!</strong>
+          </Toast.Header>
+          <Toast.Body>
+            Row deleted!
+          </Toast.Body>
+        </Toast>
+
         <AddButton />
+
         <FilterSelect setValue={setValue} />
       </div>
 
