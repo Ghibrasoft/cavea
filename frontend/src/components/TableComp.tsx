@@ -55,7 +55,7 @@ export function TableComp() {
   async function handleDelete(id: number) {
     try {
       await axios.delete(`http://localhost:3001/Inventory/${id}`)
-      getData(); // don't updates , cann't find why (it works on POST, but here not), just refresh manually and see changes :)
+      getData();
       setDeleteAlert(true);
       const filteredRows = data.rows.filter((item) => item.id !== id);
       setData((prevData) => ({
