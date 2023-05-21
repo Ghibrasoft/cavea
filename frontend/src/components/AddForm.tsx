@@ -1,22 +1,15 @@
-import axios from 'axios';
 import { Button, Container, Form } from 'react-bootstrap';
 import { IoMdAdd } from 'react-icons/io';
 import { useItemsData } from '../store/Store';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface IProps {
-  id: number;
-  item: string;
-  location: string;
-  price: number;
-}
 
 export function AddForm() {
-  const { getData } = useItemsData();
+  const { fetchData, addItem, currentPage } = useItemsData();
   const navigate = useNavigate();
 
-  // get form data
+
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -25,12 +18,8 @@ export function AddForm() {
     const formData = new FormData(formRef.current!);
     const data = Object.fromEntries(formData.entries());
     console.log(data);
-    const { item, location, price } = data;
-
-    await axios.post<IProps>("http://localhost:3001/Inventory", {
-      item, location, price
-    })
-    getData();
+    addItem(data);
+    fetchData(currentPage, 20);
     navigate('/');
   }
 
@@ -68,7 +57,7 @@ export function AddForm() {
                 placeholder=' '
                 required
               />
-              <label htmlFor='title' className='form-label'>სახელი...</label>
+              <label htmlFor='item' className='form-label'>სახელი...</label>
             </div>
             <div className='form-froup form-floating'>
               <input

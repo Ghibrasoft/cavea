@@ -57,7 +57,7 @@ addModel();
 // ];
 // const items = ["default item", "custom item", "item"];
 // function addItem() {
-//   for (let i = 1; i <= 50; i++) {
+//   for (let i = 1; i <= 10; i++) {
 //     const newItem = Inventory.build({
 //       item: chance.pickone(items),
 //       location: chance.pickone(branches),
@@ -79,13 +79,12 @@ app.get("/Inventory", async (req: Request, res: Response) => {
     limit: limit,
     offset: offset,
     order: [
-      ["item", "ASC"],
+      [sequelize.fn("LOWER", sequelize.col("item")), "ASC"],
       ["price", "DESC"],
     ],
   });
 
-  const allItems = await Inventory.findAll();
-  const allItemsLength = allItems.length;
+  const allItemsLength = await Inventory.count();
   const data = {
     rows,
     totalPages: Math.ceil(count / limit),
@@ -101,6 +100,33 @@ app.post("/Inventory", async (req: Request, res: Response) => {
   const newItem = await Inventory.create({ item, location, price });
   res.json(newItem);
   console.log("Item added successfully!");
+});
+
+// UPDATE
+app.put("/Inventory/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { item, location, price } = req.body;
+
+  try {
+    const updatedFields = {
+      ...(item && { item }),
+      ...(location && { location }),
+      ...(price && { price }),
+    };
+
+    const [numUpdatedRows] = await Inventory.update(updatedFields, {
+      where: { id },
+    });
+
+    if (numUpdatedRows === 0) {
+      return res.status(404).json({ message: `Row with ID ${id} not found` });
+    }
+
+    res.json({ message: `Row with ID ${id} updated successfully` });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ error: "Internal server error" });
+  }
 });
 
 // DELETE

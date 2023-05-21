@@ -3,78 +3,63 @@ import { AddButton } from "./AddButton";
 import { FilterSelect } from "./FilterSelect";
 import { useEffect, useState } from "react";
 import { useItemsData } from "../store/Store";
-import axios from "axios";
 
-
-interface IDataProps {
-  rows: {
-    id: number;
-    item: string;
-    location: string;
-    price: number;
-  }[];
-  allItemsLength: number;
-  totalPages: number;
-  currentPage: number;
-};
+type EditedRowTypes = {
+  item: string;
+  location: string;
+  price: number;
+}
 
 export function TableComp() {
-  const { getData } = useItemsData();
+  const { fetchData, updateRow, deleteRow, setCurrentPage, rows, currentPage, totalPages, allItemsLength } = useItemsData();
   const [value, setValue] = useState("all");
   const [deleteAlert, setDeleteAlert] = useState(false);
-  const [data, setData] = useState<IDataProps>({
-    rows: [],
-    allItemsLength: 0,
-    totalPages: 0,
-    currentPage: 1,
+  const [editMode, setEditMode] = useState(false);
+  const [selectedRow, setSelectedRow] = useState("");
+  const [editedRow, setEditedRow] = useState<EditedRowTypes>({
+    item: "",
+    location: "",
+    price: 0,
   });
+  // generate an array of page numbers to display in pagination
+  const pageNumbers = [...Array(totalPages)].map((_, index) => index + 1);
 
-  // alert msg timeout
+  // alert msg
   useEffect(() => {
     setTimeout(() => {
       setDeleteAlert(false);
-    }, 4000);
-  })
+    }, 3000);
+  }, [deleteAlert]);
 
-  // data fetching
-  async function fetchData(page: number) {
-    try {
-      const res = await axios.get("http://localhost:3001/Inventory", { params: { page } })
-      const { rows, allItemsLength, totalPages, currentPage } = res.data as IDataProps;
-      setData({ rows, allItemsLength, totalPages, currentPage });
-    } catch (error) {
-      console.log(error);
-    }
+  // edit row
+  function updateRowField(id: string) {
+    updateRow(id, rows, editedRow)
+      .then(() => {
+        fetchData(currentPage, 20);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
-  useEffect(() => {
-    fetchData(data.currentPage);
-  }, [data.currentPage]);
-
 
   // delete row
-  async function handleDelete(id: number) {
-    try {
-      await axios.delete(`http://localhost:3001/Inventory/${id}`)
-      getData();
-      setDeleteAlert(true);
-      const filteredRows = data.rows.filter((item) => item.id !== id);
-      setData((prevData) => ({
-        ...prevData,
-        rows: filteredRows,
-        allItemsLength: prevData.allItemsLength - 1,
-      }));
-    } catch (error) {
-      console.log(error);
-    }
+  async function handleDelete(id: string) {
+    deleteRow(id, rows)
+      .then(() => {
+        setDeleteAlert(true);
+        fetchData(currentPage, 20);
+      })
   }
 
   // page changing
   function handlePageChange(pageNumber: number) {
-    setData((prevData) => ({ ...prevData, currentPage: pageNumber }));
+    setCurrentPage(pageNumber);
   }
 
-  // generate an array of page numbers to display in pagination
-  const pageNumbers = [...Array(data.totalPages)].map((_, index) => index + 1);
+  // data fetching
+  useEffect(() => {
+    fetchData(currentPage, 20);
+  }, [currentPage, fetchData])
 
   return (
     <Container>
@@ -103,19 +88,91 @@ export function TableComp() {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data.rows) &&
-            data.rows.filter(({ location }) => value === location || value === "all").map(({ id, item, location, price }) => (
+          {
+            rows.filter(({ location }) => value === location || value === "all").map(({ id, item, location, price }) => (
               <tr key={id}>
-                <td className='text-center'>{item}</td>
-                <td className='text-center'>{location}</td>
-                <td className='text-center'>{price}</td>
                 <td className='text-center'>
-                  <button
-                    className="badge rounded-pill bg-danger border-0"
-                    onClick={() => handleDelete(id)}
-                  >
-                    Delete
-                  </button>
+                  <div className="d-flex justify-content-center text-center">
+                    {
+                      editMode && selectedRow === id ?
+                        <input
+                          type="text"
+                          defaultValue={item}
+                          className="form-control form-control-sm text-center"
+                          style={{ width: "fit-content" }}
+                          onChange={(e) => setEditedRow({ ...editedRow, item: e.target.value })}
+                        />
+                        :
+                        item
+                    }
+                  </div>
+                </td>
+                <td className='text-center'>
+                  <div className="d-flex justify-content-center text-center">
+                    {
+                      editMode && selectedRow === id ?
+                        <input
+                          type="text"
+                          defaultValue={location}
+                          className="form-control form-control-sm text-center"
+                          style={{ width: "fit-content" }}
+                          onChange={(e) => setEditedRow({ ...editedRow, location: e.target.value })}
+                        />
+                        :
+                        location
+                    }
+                  </div>
+                </td>
+                <td className='text-center'>
+                  <div className="d-flex justify-content-center">
+                    {
+                      editMode && selectedRow === id ?
+                        <input
+                          type="number"
+                          defaultValue={price}
+                          className="form-control form-control-sm text-center"
+                          style={{ width: "fit-content" }}
+                          onChange={(e) => setEditedRow({ ...editedRow, price: Number(e.target.value) })}
+                        />
+                        :
+                        price
+                    }
+                  </div>
+                </td>
+                <td className='text-center'>
+                  <div className="d-flex justify-content-center align-items-center gap-2">
+                    {
+                      editMode && selectedRow === id ?
+                        <>
+                          <button
+                            className="badge rounded-pill bg-success border-0"
+                            onClick={() => { setEditMode(false); updateRowField(id) }}
+                          >
+                            Update
+                          </button>
+                          <button
+                            className="badge rounded-pill bg-danger border-0"
+                            onClick={() => { setEditMode(false); updateRowField(id) }}
+                          >
+                            Cancel
+                          </button>
+                        </>
+                        :
+                        <>
+                          <button
+                            className="badge rounded-pill bg-warning border-0"
+                            onClick={() => { setEditMode(true); setSelectedRow(id) }}>
+                            Edit
+                          </button>
+                          <button
+                            className="badge rounded-pill bg-danger border-0"
+                            onClick={() => handleDelete(id)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                    }
+                  </div>
                 </td>
               </tr>
             ))}
@@ -126,26 +183,28 @@ export function TableComp() {
         <Pagination>
           <Pagination.Prev
             onClick={() =>
-              handlePageChange(Math.max(data.currentPage - 1, 1))
+              handlePageChange(Math.max(currentPage - 1, 1))
             }
           />
 
-          {pageNumbers.map((pageNumber) => (
-            <Pagination.Item
-              key={pageNumber}
-              active={pageNumber === data.currentPage}
-              onClick={() => handlePageChange(pageNumber)}
-            >
-              {pageNumber}
-            </Pagination.Item>
-          ))}
+          {
+            pageNumbers.map((pageNumber) => (
+              <Pagination.Item
+                key={pageNumber}
+                active={pageNumber === currentPage}
+                onClick={() => handlePageChange(pageNumber)}
+              >
+                {pageNumber}
+              </Pagination.Item>
+            ))
+          }
           <Pagination.Next
             onClick={() =>
-              handlePageChange(Math.min(data.currentPage + 1, data.totalPages))
+              handlePageChange(Math.min(currentPage + 1, totalPages))
             }
           />
           <small className="d-flex align-items-center text-muted fst-italic ms-1">
-            ({data.allItemsLength}) Item/s
+            ({allItemsLength}) Item/s
           </small>
         </Pagination>
       </div>
