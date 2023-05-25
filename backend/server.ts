@@ -12,7 +12,20 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
 
 // Passing a connection URL
-const sequelize = new Sequelize(process.env.CONN_POSTG_URL || "", {
+// const sequelize = new Sequelize(process.env.CONN_POSTG_URL || "", {
+//   define: {
+//     freezeTableName: true, // don't pluralize names globally
+//   },
+// });
+
+// locally PG
+const sequelize = new Sequelize({
+  dialect: "postgres",
+  username: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DB,
+  host: process.env.HOST,
+  port: Number(process.env.PORT_PG),
   define: {
     freezeTableName: true, // don't pluralize names globally
   },
@@ -23,7 +36,7 @@ const Inventory = sequelize.define(
   "Inventory",
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -48,24 +61,24 @@ async function addModel() {
 addModel();
 
 // generate records randomly for testing (unComment and press Ctrl + S )
-// const branches = [
-//   "Head Office",
-//   "Cavea Tbilisi Mall",
-//   "Cavea City Mall",
-//   "Cavea East Point",
-//   "Cavea Gallery",
-// ];
-// const items = ["default item", "custom item", "item"];
-// function addItem() {
-//   for (let i = 1; i <= 10; i++) {
-//     const newItem = Inventory.build({
-//       item: chance.pickone(items),
-//       location: chance.pickone(branches),
-//       price: chance.integer({ min: 15, max: 30 }),
-//     });
-//     newItem.save();
-//   }
-// }
+const branches = [
+  "Head Office",
+  "Cavea Tbilisi Mall",
+  "Cavea City Mall",
+  "Cavea East Point",
+  "Cavea Gallery",
+];
+const items = ["default item", "custom item", "item"];
+function addItem() {
+  for (let i = 1; i <= 5; i++) {
+    const newItem = Inventory.build({
+      item: chance.pickone(items),
+      location: chance.pickone(branches),
+      price: chance.integer({ min: 15, max: 30 }),
+    });
+    newItem.save();
+  }
+}
 // addItem();
 
 // GET all items
