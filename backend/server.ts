@@ -58,7 +58,7 @@ async function addModel() {
   await Inventory.sync();
   console.log("Database sync success..!");
 }
-addModel();
+// addModel();
 
 // generate records randomly for testing (unComment and press Ctrl + S )
 const branches = [

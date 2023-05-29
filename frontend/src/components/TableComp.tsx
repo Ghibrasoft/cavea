@@ -1,8 +1,9 @@
-import { Container, Pagination, Toast } from "react-bootstrap";
+import { Button, Container, Modal, Pagination, Toast } from "react-bootstrap";
 import { AddButton } from "./AddButton";
 import { FilterSelect } from "./FilterSelect";
 import { useEffect, useState } from "react";
 import { useItemsData } from "../store/Store";
+import { BiTrashAlt } from 'react-icons/bi'
 
 type EditedRowTypes = {
   item: string;
@@ -14,6 +15,8 @@ export function TableComp() {
   const { fetchData, updateRow, deleteRow, setCurrentPage, rows, currentPage, totalPages, allItemsLength } = useItemsData();
   const [value, setValue] = useState("all");
   const [deleteAlert, setDeleteAlert] = useState(false);
+  const [delModal, setDelModal] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState("");
   const [editedRow, setEditedRow] = useState<EditedRowTypes>({
@@ -24,7 +27,7 @@ export function TableComp() {
   // generate an array of page numbers to display in pagination
   const pageNumbers = [...Array(totalPages)].map((_, index) => index + 1);
 
-  // alert msg
+  // delete alert msg
   useEffect(() => {
     setTimeout(() => {
       setDeleteAlert(false);
@@ -47,6 +50,7 @@ export function TableComp() {
     deleteRow(id, rows)
       .then(() => {
         setDeleteAlert(true);
+        setDelModal(false);
         fetchData(currentPage, 20);
       })
   }
@@ -63,6 +67,28 @@ export function TableComp() {
 
   return (
     <Container>
+
+      {/* delete confirmation modal */}
+      <Modal
+        show={delModal}
+        // backdrop="static" // will not trigger a Modal onHide when clicked
+        onHide={() => setDelModal(false)}
+        className="d-flex justify-content-center align-items-center"
+      >
+        <Modal.Header className="d-flex flex-column justify-content-between align-items-center">
+          <BiTrashAlt size={40} color="red" />
+          <h2 className="fw-bold">Confirm delete</h2>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this row?</p>
+          <small className="text-muted">This process cann't be undone</small>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => handleDelete(selectedId)}>Delete</Button>
+          <Button variant="secondary" onClick={() => setDelModal(false)}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
+
       <div className='hstack gap-3 d-flex justify-content-end'>
         <Toast show={deleteAlert} onClose={() => setDeleteAlert(false)}>
           <Toast.Header closeButton={false}>
@@ -166,7 +192,7 @@ export function TableComp() {
                           </button>
                           <button
                             className="badge rounded-pill bg-danger border-0"
-                            onClick={() => handleDelete(id)}
+                            onClick={() => { setSelectedId(id); setDelModal(true) }}
                           >
                             Delete
                           </button>
